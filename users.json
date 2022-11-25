@@ -1,0 +1,12 @@
+[
+    {
+        "Usuario":"holaxd",
+        "Clave":"holaxd",
+        "Rol":"admin"
+    },
+    {
+        "Usuario":"hola2",
+        "Clave":"hola2",
+        "Rol":"asist"
+    }
+]
