@@ -17,14 +17,19 @@ app.use('/clients', require('./routes/clients'));
 
 //Create the server
 app.listen(PORT, async()=>{
-    console.log(`Server running! port=${PORT} on http://localhost:${PORT}`);
+    console.log(`Server running! on http://localhost:${PORT}`);
     //force:True DROP TABLES
     await sequelize.sync({force: true}).then(()=>{
         console.log('Connection to DB \'SEQUELIZE\' confirmed');
         User.create({
-            username:'Ivan',
-            hashedPass:'holaxd',
+            username:'admin',
+            hashedPass:process.env.ADMIN_PASSWORD,
             role: 1
+        });
+        User.create({
+            username:'client',
+            hashedPass:process.env.CLIENT_PASSWORD,
+            role: 0
         });
     }).catch(error=>{
         console.log('Failed connection:',error)

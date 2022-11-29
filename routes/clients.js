@@ -3,13 +3,25 @@ const router = express.Router();
 require('dotenv').config()
 const auth = require('../auth/auth');
 const Client = require('../database/models/Client');
-const User = require('../database/models/User');
 
 // GET ALL CLIENTS
 //Requires: token
 router.get('/', [auth.verifyToken,auth.verifyRole], (req, res) => {
     Client.findAll().then(clients => {
         res.json(clients);
+    }).catch(error=>{
+        res.status(400).json(error);
+    })
+});
+
+
+// GET CLIENTS BY PAGE[50]
+//Requires: token
+router.get('/:page', [auth.verifyToken,auth.verifyRole], (req, res) => {
+    Client.findAll({offset:(req.params.page-1)*50,limit:50}).then(clients => {
+        res.status(200).json(clients);
+    }).catch(error=>{
+        res.status(400).json(error);
     })
 });
 
@@ -17,7 +29,9 @@ router.get('/', [auth.verifyToken,auth.verifyRole], (req, res) => {
 //Requires: Token
 router.get('/:dni',[auth.verifyToken, auth.verifyRole], (req,res)=>{
     Client.findByPk(req.params.dni).then(client=>{
-        res.json(client);
+        res.status(200).json(client);
+    }).catch(error=>{
+        res.status(400).json(error);
     })
 })
 
@@ -35,7 +49,9 @@ router.put('/:dni', [auth.verifyToken, auth.verifyRole], (req,res)=>{
             DNI: req.params.dni
         }
     }).then(result => {
-        res.json(result);
+        res.status(200).json(result);
+    }).catch(error=>{
+        res.status(400).json(error);
     });
 })
 
@@ -50,6 +66,8 @@ router.patch('/attendance/:dni', [auth.verifyToken], (req,res)=>{
         }
     }).then(result => {
         res.json(result);
+    }).catch(error=>{
+        res.status(400).json({error})
     });
 })
 
@@ -63,7 +81,9 @@ router.patch('/payment/:dni', [auth.verifyToken, auth.verifyRole], (req,res)=>{
             DNI: req.params.dni
         }
     }).then(result => {
-        res.json(result);
+        res.status(200).json(result);
+    }).catch(error=>{
+        res.status(400).json(error);
     });
 })
 
@@ -78,7 +98,24 @@ router.post('/', [auth.verifyToken, auth.verifyRole], (req,res)=> {
         lastPayment: req.body.lastPayment
     }).then(client=>{
         res.status(201).json(client)
+    }).catch(error=>{
+        res.status(400).json(error);
     })
 })
+
+//DELETE CLIENT
+//Requires: Token
+// DELETE /api/posts/:id
+router.delete('/delete/:dni', (req, res) => {
+    Client.destroy({
+        where: {
+            DNI: req.params.dni
+        }
+    }).then(result => {
+        res.json(result);
+    }).catch(error=>{
+        res.status(400).json(error);
+    })
+});
 
 module.exports=router

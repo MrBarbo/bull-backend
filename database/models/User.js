@@ -32,7 +32,7 @@ User.init({
         }
     },
     
-    // 0 for users, 1 for admin
+    // 0 for clients, 1 for admin
     role: {
         type: DataTypes.INTEGER,
         validate:{

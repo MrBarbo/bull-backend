@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const auth = require('../auth/auth');
 const User = require('../database/models/User')
 
-
+//TEST
+//Requires:-
 router.get('/test', (req,res)=>{
     res.send('Test Succeded');
 })
@@ -33,19 +34,34 @@ router.post("/login", async(req , res) => {
 //Requires: token
 router.get('/', [auth.verifyToken, auth.verifyRole], (req, res) => {
     User.findAll().then(users => {
-        res.json(users);
+        res.status(200).json(users);
+    }).catch(error=>{
+        res.status(400).json({error});
     })
 });
 
 //GET ONE USER
-//Requires: token
+//Requires: Token
 router.get('/:username',[auth.verifyToken,auth.verifyRole], async(req,res)=> {
     const user = await User.findByPk(req.params.username).then(
-        res.json(user)
+        res.status(200).json(user)
     ).catch(
         res.status(401)
     )
 });
 
+//Update hashedPass field of a user
+//Requires: Token
+router.patch('/changepass', [auth.verifyToken], (req,res)=>{
+    User.update({
+        hashedPass: req.body.password
+    }, {
+        where: {
+            username: req.user
+        }
+    }).then(result => {
+        res.json(result);
+    });
+})
 
 module.exports=router
