@@ -18,7 +18,7 @@ router.get('/', [auth.verifyToken,auth.verifyRole], (req, res) => {
 // GET CLIENTS BY PAGE[50]
 //Requires: token
 router.get('/:page', [auth.verifyToken,auth.verifyRole], (req, res) => {
-    Client.findAll({offset:(req.params.page-1)*50,limit:50}).then(clients => {
+    Client.findAll({offset:((req.params.page-1)*50),limit:50}).then(clients => {
         res.status(200).json(clients);
     }).catch(error=>{
         res.status(400).json(error);

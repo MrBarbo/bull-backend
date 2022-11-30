@@ -1,6 +1,7 @@
 const express= require('express');
 require('dotenv').config()
 const app = express();
+const cors = require('cors')
 const sequelize = require('./database/db');
 PORT = process.env.PORT;
 const User = require('./database/models/User')
@@ -9,6 +10,7 @@ const User = require('./database/models/User')
 // To be able to fill the req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 // Stablish the routes file
 app.use('/users', require('./routes/users'));

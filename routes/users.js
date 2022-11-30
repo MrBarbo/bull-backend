@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const usuarios = require('../users.json');
 require('dotenv').config()
 const jwt = require("jsonwebtoken");
 const auth = require('../auth/auth');
@@ -22,9 +21,10 @@ router.post("/login", async(req , res) => {
     }else if(req.body.password !== user.hashedPass){
         res.status(403).json({msg:'Incorrect password'});
     }else{
+        let role=user.role
         jwt.sign({user: req.body.username},process.env.SECRET_KEY,{expiresIn:'1d'}, (err, token) => {
             res.json({
-                token
+                token, role
             });
         });
     }
@@ -42,22 +42,22 @@ router.get('/', [auth.verifyToken, auth.verifyRole], (req, res) => {
 
 //GET ONE USER
 //Requires: Token
-router.get('/:username',[auth.verifyToken,auth.verifyRole], async(req,res)=> {
-    const user = await User.findByPk(req.params.username).then(
+router.get('/:username', [auth.verifyToken, auth.verifyRole], (req,res)=> {
+    User.findByPk(req.params['username']).then(user=>{
         res.status(200).json(user)
-    ).catch(
+    }).catch(
         res.status(401)
     )
 });
 
 //Update hashedPass field of a user
 //Requires: Token
-router.patch('/changepass', [auth.verifyToken], (req,res)=>{
+router.patch('/changepass', [auth.verifyToken, auth.verifyRole], (req,res)=>{
     User.update({
         hashedPass: req.body.password
     }, {
         where: {
-            username: req.user
+            username: req.body.user
         }
     }).then(result => {
         res.json(result);
