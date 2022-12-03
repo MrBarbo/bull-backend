@@ -8,7 +8,7 @@ const User = require('../database/models/User')
 //TEST
 //Requires:-
 router.get('/test', (req,res)=>{
-    res.send('Test Succeded');
+    res.send('Test Success!');
 })
 
 
@@ -53,17 +53,31 @@ router.get('/:username', [auth.verifyToken, auth.verifyRole], (req,res)=> {
 //Update hashedPass field of a user
 //Requires: Token
 router.patch('/changepass', [auth.verifyToken, auth.verifyRole], (req,res)=>{
-    User.update({
-        hashedPass: req.body.password
-    }, {
-        where: {
-            username: req.body.user
+    User.findByPk(req.user).then(user=>{
+        if(req.body.oldPassword!==user.hashedPass){
+            res.status(403).json('Old password doesnt match')
+        }else{
+            User.update({
+                hashedPass: req.body.password
+            }, {
+                where: {
+                    username: req.user
+                }
+            }).then(result => {
+                if (parseInt(result)===0){
+                    res.status(202).json('Nothing changed. Check the request parameters')
+                }else{
+                    res.status(200).json('Updated user password')
+                }
+            }).catch(error=>{
+                res.status(400).json({error});
+            });
         }
-    }).then(result => {
-        res.status(200).json(result);
+        
     }).catch(error=>{
-        res.status(400).json({error});
-    });
+        res.status(400).json({error})
+    })
+    
 })
 
 module.exports=router

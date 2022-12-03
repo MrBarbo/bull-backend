@@ -21,18 +21,22 @@ app.use('/clients', require('./routes/clients'));
 app.listen(PORT, async()=>{
     console.log(`Server running! on http://localhost:${PORT}`);
     //force:True DROP TABLES
-    await sequelize.sync({force: true}).then(()=>{
+    await sequelize.sync({force: false}).then(()=>{
         console.log('Connection to DB \'SEQUELIZE\' confirmed');
-        User.create({
-            username:'admin',
-            hashedPass:process.env.ADMIN_PASSWORD,
-            role: 1
-        });
-        User.create({
-            username:'client',
-            hashedPass:process.env.CLIENT_PASSWORD,
-            role: 0
-        });
+        User.count().then(result=>{
+            if(result===0){
+                User.create({
+                    username:'admin',
+                    hashedPass:process.env.ADMIN_PASSWORD,
+                    role: 1
+                }).catch(error=>console.log(error.name));
+                User.create({
+                    username:'client',
+                    hashedPass:process.env.CLIENT_PASSWORD,
+                    role: 0
+                }).catch(error=>console.log(error.name));;
+            }
+        })  
     }).catch(error=>{
         console.log('Failed connection:',error)
     })

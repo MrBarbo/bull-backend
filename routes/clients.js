@@ -27,7 +27,7 @@ router.get('/:page', [auth.verifyToken,auth.verifyRole], (req, res) => {
 
 //GET CLIENT BY DNI
 //Requires: Token
-router.get('/:dni',[auth.verifyToken, auth.verifyRole], (req,res)=>{
+router.get('/dni/:dni',[auth.verifyToken, auth.verifyRole], (req,res)=>{
     Client.findByPk(req.params.dni).then(client=>{
         res.status(200).json(client);
     }).catch(error=>{
@@ -37,7 +37,7 @@ router.get('/:dni',[auth.verifyToken, auth.verifyRole], (req,res)=>{
 
 //Update client by dni
 //Requires: Token
-router.put('/:dni', [auth.verifyToken, auth.verifyRole], (req,res)=>{
+router.put('/dni/:dni', [auth.verifyToken, auth.verifyRole], (req,res)=>{
     Client.update({
         DNI: req.body.dni,
         name: req.body.name,
@@ -49,7 +49,11 @@ router.put('/:dni', [auth.verifyToken, auth.verifyRole], (req,res)=>{
             DNI: req.params.dni
         }
     }).then(result => {
-        res.status(200).json(result);
+        if (parseInt(result)===0){
+            res.status(202).json('Nothing changed. Check the request parameters')
+        }else{
+            res.status(200).json('Updated client')
+        }
     }).catch(error=>{
         res.status(400).json(error);
     });
@@ -65,7 +69,11 @@ router.patch('/attendance/:dni', [auth.verifyToken], (req,res)=>{
             DNI: req.params.dni
         }
     }).then(result => {
-        res.json(result);
+        if (parseInt(result)===0){
+            res.status(202).json('Nothing changed. Check the request parameters')
+        }else{
+            res.status(200).json('Updated client')
+        }
     }).catch(error=>{
         res.status(400).json({error})
     });
@@ -81,7 +89,11 @@ router.patch('/payment/:dni', [auth.verifyToken, auth.verifyRole], (req,res)=>{
             DNI: req.params.dni
         }
     }).then(result => {
-        res.status(200).json(result);
+        if (parseInt(result)===0){
+            res.status(202).json('Nothing changed. Check the request parameters')
+        }else{
+            res.status(200).json('Updated client')
+        }
     }).catch(error=>{
         res.status(400).json(error);
     });
