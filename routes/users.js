@@ -45,9 +45,9 @@ router.get('/', [auth.verifyToken, auth.verifyRole], (req, res) => {
 router.get('/:username', [auth.verifyToken, auth.verifyRole], (req,res)=> {
     User.findByPk(req.params['username']).then(user=>{
         res.status(200).json(user)
-    }).catch(
-        res.status(401)
-    )
+    }).catch(error=>{
+        res.status(401).json({error})
+    })
 });
 
 //Update hashedPass field of a user
@@ -60,7 +60,9 @@ router.patch('/changepass', [auth.verifyToken, auth.verifyRole], (req,res)=>{
             username: req.body.user
         }
     }).then(result => {
-        res.json(result);
+        res.status(200).json(result);
+    }).catch(error=>{
+        res.status(400).json({error});
     });
 })
 

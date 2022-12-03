@@ -99,7 +99,11 @@ router.post('/', [auth.verifyToken, auth.verifyRole], (req,res)=> {
     }).then(client=>{
         res.status(201).json(client)
     }).catch(error=>{
-        res.status(400).json(error);
+        if (error.name==='SequelizeUniqueConstraintError'){
+            res.status(403).json({error:error.name});
+        }else{
+            res.status(400).json({error});
+        }
     })
 })
 
