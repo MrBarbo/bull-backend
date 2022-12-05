@@ -46,6 +46,7 @@ router.put('/dni/:dni', [auth.verifyToken, auth.verifyRole], (req,res)=>{
         DNI: req.body.dni,
         name: req.body.name,
         description: req.body.description,
+        phone:req.body.phone,
         lastAttendance: req.body.lastAttendance,
         lastPayment: req.body.lastPayment
     }, {
@@ -110,6 +111,7 @@ router.post('/', [auth.verifyToken, auth.verifyRole], (req,res)=> {
         DNI:req.body.DNI,
         name:req.body.name,
         description: req.body.description,
+        phone: req.body.phone,
         lastAttendance: req.body.lastAttendance,
         lastPayment: req.body.lastPayment
     }).then(client=>{

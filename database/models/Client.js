@@ -42,6 +42,16 @@ Client.init(
             }
         },
     },
+    phone:{
+        type: DataTypes.STRING,
+        allowNull:true,
+        validate: {
+            len: {
+                args: [5, 15],
+                msg: "Phone must be between 5 and 15 characters"
+            }
+        },
+    },
     lastAttendance:{
         type: DataTypes.DATE
     },
