@@ -31,7 +31,7 @@ router.get('/pages', [auth.verifyToken,auth.verifyRole], (req, res) => {
 
 //GET CLIENT BY DNI
 //Requires: Token
-router.get('/dni/:dni',[auth.verifyToken, auth.verifyRole], (req,res)=>{
+router.get('/dni/:dni',[auth.verifyToken], (req,res)=>{
     Client.findByPk(req.params.dni).then(client=>{
         res.status(200).json(client);
     }).catch(error=>{
