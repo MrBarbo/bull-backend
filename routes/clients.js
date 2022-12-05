@@ -15,15 +15,19 @@ router.get('/', [auth.verifyToken,auth.verifyRole], (req, res) => {
 });
 
 
-// GET CLIENTS BY PAGE[50]
+// GET CLIENTS [PAGINATED]
+//Query example: http://host:port/clients/pages?pageSize=3&page=1
 //Requires: token
-router.get('/:page', [auth.verifyToken,auth.verifyRole], (req, res) => {
-    Client.findAll({offset:((req.params.page-1)*50),limit:50}).then(clients => {
+router.get('/pages', [auth.verifyToken,auth.verifyRole], (req, res) => {
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 0;
+    const page = req.query.page ? parseInt(req.query.page) : 0;
+    Client.findAndCountAll({offset:((page)*pageSize),limit:pageSize}).then(clients => {
         res.status(200).json(clients);
     }).catch(error=>{
         res.status(400).json(error);
     })
 });
+
 
 //GET CLIENT BY DNI
 //Requires: Token

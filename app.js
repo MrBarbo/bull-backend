@@ -10,9 +10,11 @@ const User = require('./database/models/User')
 // To be able to fill the req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+//CORS activation
 app.use(cors());
 
-// Stablish the routes file
+// Stablish the routes files
 app.use('/users', require('./routes/users'));
 app.use('/clients', require('./routes/clients'));
 
