@@ -47,8 +47,8 @@ Client.init(
         allowNull:true,
         validate: {
             len: {
-                args: [5, 15],
-                msg: "Phone must be between 5 and 15 characters"
+                args: [5, 20],
+                msg: "Phone must be between 5 and 20 characters"
             }
         },
     },
