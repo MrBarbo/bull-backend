@@ -53,7 +53,7 @@ router.get('/:username', [auth.verifyToken, auth.verifyRole], (req,res)=> {
 //Update hashedPass field of a user
 //Requires: token
 router.patch('/changepass', [auth.verifyToken, auth.verifyRole], (req,res)=>{
-    User.findByPk(req.user).then(user=>{//CAMBIAR 
+    User.findByPk(req.user).then(user=>{
         if(req.body.oldPassword!==user.hashedPass){
             res.status(403).json('Old password doesnt match')
         }else{
