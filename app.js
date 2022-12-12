@@ -23,7 +23,7 @@ app.use('/clients', require('./routes/clients'));
 app.listen(PORT, async()=>{
     console.log(`Server running! on http://localhost:${PORT}`);
     //force:True DROP TABLES
-    await sequelize.sync({force: true}).then(()=>{
+    await sequelize.sync({force: false}).then(()=>{
         console.log('Connection to DB \'SEQUELIZE\' confirmed');
         User.count().then(result=>{
             if(result===0){
