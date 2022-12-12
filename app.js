@@ -7,7 +7,7 @@ PORT = process.env.PORT;
 const User = require('./database/models/User')
 
 // Middleware
-// To be able to fill the req.body
+// To be able to fill the req.body*
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
