@@ -4,7 +4,7 @@ require('dotenv').config()
 const auth = require('../auth/auth');
 const Client = require('../database/models/Client');
 
-// GET ALL CLIENTS
+//GET ALL CLIENTS
 //Requires: token
 router.get('/', [auth.verifyToken,auth.verifyRole], (req, res) => {
     Client.findAll().then(clients => {
